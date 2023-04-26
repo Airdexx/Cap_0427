@@ -1,0 +1,7 @@
+names:
+- head
+- helmet
+- person
+nc: 3
+train: Hard-Hat-Workers-1/train/images
+val: Hard-Hat-Workers-1/test/images

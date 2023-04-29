@@ -14,10 +14,10 @@ def index(request):
     return render(request,'index.html')
 print(torch.cuda.is_available())
 #load model
-model = yolov5.load('C:/Users/gmltj/OneDrive/Desktop/Caps_0426/joljjack/yolov5-deepsort-web-main/stream/best.pt')
+model = yolov5.load('/home/ubuntu/Cap_0427/stream/best.pt')
 model.names = ['head', 'helmet', 'person']
 # model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-device = select_device('') # 0 for gpu, '' for cpu
+device = select_device(0) # 0 for gpu, '' for cpu
 # initialize deepsort
 cfg = get_config()
 cfg.merge_from_file("deep_sort/configs/deep_sort.yaml")

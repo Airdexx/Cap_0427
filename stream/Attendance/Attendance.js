@@ -1,26 +1,39 @@
 const admin = require('firebase-admin');
-const functions = require('firebase-functions');
-admin.initializeApp();
+const serviceAccount = require('C:/Users/gmltj/OneDrive/Desktop/Caps_0426/Cap_0427-master/stream/Attendance/capstone-e566b-firebase-adminsdk-ptihx-7000c528a4.json'); // 해당 파일과 같은위치
+
+// Firebase 초기화
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://capstone-e566b.firebaseio.com'
+});
 
 const db = admin.firestore();
-const rtdbRef = admin.database().ref('A');
 
-// 매일 자정마다 실행될 함수
-exports.resetValueAndSaveToFirestore = functions.pubsub
-  .schedule('* * * * *') // 매분실행
-  .timeZone('Asia/Seoul') // 원하는 타임존으로 설정
-  .onRun(async (context) => {
-    const currentDateTime = new Date();
-    const currentDateString = currentDateTime.toISOString().substring(0, 10); // yyyy-mm-dd 형태로 변환
+// 매 시간마다 실행되는 함수
+async function saveAttendanceHistory() {
+  const now = new Date();
 
-    // RTDB의 값을 초기화
-    await rtdbRef.set(false);
+  // 이전 Attendance 값 가져오기
+  const previousAttendanceRef = db.collection('attendance').doc('previous');
+  const previousAttendanceSnapshot = await previousAttendanceRef.get();
+  const previousAttendanceValue = previousAttendanceSnapshot.data().value;
 
-    // 초기화 이전의 값을 Firestore에 저장
-    const usersSnapshot = await db.collection(`${collectionId}/${currentDateString}/users`).get();
-    usersSnapshot.forEach(async (docSnapshot) => {
-      await db.collection(`${collectionId}/${documentId}/users`).doc(docSnapshot.id).set(docSnapshot.data());
-    });
-
-    console.log('Value reset and previous value saved to Firestore successfully.');
+  // Firestore에 값 저장
+  const attendanceHistoryRef = db.collection('attendance_history').doc(now.toISOString());
+  await attendanceHistoryRef.set({
+    id: 'some_id',
+    date: now.toDateString(),
+    value: previousAttendanceValue
   });
+
+  // Attendance 값 초기화
+  await previousAttendanceRef.update({ value: false });
+
+  console.log('Attendance history saved at', now);
+}
+
+// 스케쥴러 설정
+const schedule = require('node-schedule');
+const rule = new schedule.RecurrenceRule();
+rule.minute = '*'; // 매 시간 0분에 실행
+schedule.scheduleJob(rule, saveAttendanceHistory);

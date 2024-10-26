@@ -1,7 +1,7 @@
 // 최종수정일 : 2023-05-10 09:20 PM
 // 필요한 모듈 선언
 const admin = require('firebase-admin');
-const serviceAccount = require('C:/Users/gmltj/OneDrive/Desktop/Caps_0426/Cap_0427-master/stream/Attendance/capstone-e566b-firebase-adminsdk-ptihx-7000c528a4.json'); // 해당 파일과 같은위치
+const serviceAccount = require('키 json 파일 위치'); // 해당 파일과 같은위치
 const cron = require('node-cron')
 // 초기화 및 DB URL 로드
 admin.initializeApp({

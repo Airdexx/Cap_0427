@@ -39,7 +39,7 @@ deepsort = DeepSort('osnet_x0_25',
                     )
 # Get names and colors
 names = model.module.names if hasattr(model, 'module') else model.names
-cred = credentials.Certificate('C:/Users/gmltj/OneDrive/Desktop/Cap_0427-master/stream/Attendance/capstone-e566b-firebase-adminsdk-ptihx-7000c528a4.json')
+cred = credentials.Certificate('키 json 파일 위치치')
 firebase_admin.initialize_app(cred,{
     'databaseURL' : 'https://capstone-e566b-default-rtdb.asia-southeast1.firebasedatabase.app/'
     })
